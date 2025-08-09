@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Entry point for the Payment Service Spring Boot application.
  */
 @SpringBootApplication
-public class PaymentServiceApplication {
+public final class PaymentServiceApplication {
 
     /**
      * Private constructor to prevent instantiation of utility-like class.
