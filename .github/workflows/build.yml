@@ -1,0 +1,39 @@
+name: Build and Test Workflow
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Клонируем код
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Шаг 2: Устанавливаем JDK 23
+      - name: Set up JDK 23
+        uses: actions/setup-java@v3
+        with:
+          java-version: '23'
+          distribution: 'temurin'
+
+      # Шаг 3: Компиляция проекта (без тестов)
+      - name: Compile with Maven
+        run: mvn -B clean compile
+
+      # Шаг 4: Запуск тестов отдельно
+      - name: Run tests
+        run: mvn -B test
+
+      # Шаг 5: Запуск Checkstyle для payment-service-application
+      - name: Run Checkstyle for payment-service-application
+        working-directory: ./payment-service-app
+        run: mvn -B checkstyle:check
+
