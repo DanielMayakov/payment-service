@@ -21,6 +21,7 @@ databaseChangeLog:
 
   - include:
       file: v1.1/db.changelog-1.1-add-demo-payment.yaml
+
       relativeToChangelogFile: true
 
   - changeSet:
@@ -29,3 +30,17 @@ databaseChangeLog:
       changes:
         - tagDatabase:
             tag: v1.1
+
+
+  - include:
+      file: v1.2/db.changelog-1.2-bulk-insert.yaml
+
+      relativeToChangelogFile: true
+
+  - changeSet:
+      id: tag-1.2
+      author: mentor
+      changes:
+        - tagDatabase:
+            tag: v1.2
+
