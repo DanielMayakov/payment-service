@@ -7,7 +7,7 @@ import org.springframework.util.StringUtils;
 public final class PaymentFilterFactory {
     public static Specification<Payment> fromFilter(PaymentFilter
                                                             filter) {
-        Specification<Payment> spec = Specification.unrestricted();
+        Specification<Payment> spec = (root, query, cb) -> cb.conjunction();
         if (StringUtils.hasText(filter.getCurrency())) {
             spec =
 
