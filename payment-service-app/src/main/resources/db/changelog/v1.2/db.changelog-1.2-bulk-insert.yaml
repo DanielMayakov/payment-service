@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.2-load-payments-from-csv
+      author: mentor
+      changes:
+        - loadData:
+            tableName: payments
+            file: payments.csv
+            relativeToChangelogFile: true
+            encoding: UTF-8
+            usePreparedStatements: true
+            columns:
+              - column: { name: guid,               type: UUID }
+              - column: { name: inquiry_ref_id,     type: UUID }
+              - column: { name: amount,             type: NUMERIC }
+              - column: { name: currency,           type: STRING }
+              - column: { name: transaction_ref_id, type: UUID }
+              - column: { name: status,             type: STRING }
+              - column: { name: note,               type: STRING }
+              - column: { name: created_at,         type: timestamp with time zone }
+              - column: { name: updated_at,         type: timestamp with time zone }
