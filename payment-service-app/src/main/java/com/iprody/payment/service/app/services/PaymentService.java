@@ -25,7 +25,7 @@ public class PaymentService {
         return paymentRepository.findAll(spec);
     }
 
-    // ДОБАВИТЬ
+
     public Page<Payment> searchPaged(PaymentFilter filter, Pageable
             pageable) {
         Specification<Payment> spec =
