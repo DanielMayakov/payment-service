@@ -1,7 +1,9 @@
 package com.iprody.payment.service.app;
 
+import com.iprody.payment.service.app.model.PaymentStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 public class PaymentFilter {
     private String currency;
@@ -9,6 +11,7 @@ public class PaymentFilter {
     private BigDecimal maxAmount;
     private Instant createdAfter;
     private Instant createdBefore;
+    private List<PaymentStatus> statuses;
 
     public String getCurrency() {
         return currency;
@@ -48,6 +51,13 @@ public class PaymentFilter {
 
     public void setCreatedBefore(Instant createdBefore) {
         this.createdBefore = createdBefore;
+    }
 
+    public List<PaymentStatus> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(List<PaymentStatus> statuses) {
+        this.statuses = statuses;
     }
 }
