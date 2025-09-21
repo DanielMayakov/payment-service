@@ -1,46 +1,21 @@
-package com.iprody.payment.service.app.model;
+package com.iprody.payment.service.app.dto;
 
-import jakarta.persistence.*;
+import com.iprody.payment.service.app.model.PaymentStatus;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
-@Entity
-@Table(name = "payment")
-public class Payment {
-
-    @Id
-    @Column(name = "guid", nullable = false, unique = true, updatable = false)
+public class PaymentDto {
     private UUID guid;
-
-    @Column(name = "inquiry_ref_id", nullable = false)
     private UUID inquiryRefId;
-
-    @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal amount;
-
-    @Column(nullable = false, length = 3)
     private String currency;
-
-    @Column(name = "transaction_ref_id")
     private UUID transactionRefId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private PaymentStatus status;
-
-    @Column(columnDefinition = "text")
     private String note;
-
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
-
-    public Payment() {
-    }
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public UUID getGuid() {
         return guid;
@@ -67,6 +42,7 @@ public class Payment {
     }
 
     public String getCurrency() {
+
         return currency;
     }
 
@@ -98,33 +74,20 @@ public class Payment {
         this.note = note;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(OffsetDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public OffsetDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        OffsetDateTime now = OffsetDateTime.now();
-        if (createdAt == null) {
-            createdAt = now;
-        }
-        updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = OffsetDateTime.now();
-    }
 }

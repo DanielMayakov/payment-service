@@ -23,4 +23,49 @@ public final class PaymentSpecifications {
         return (root, query, cb) -> cb.between(root.get("createdAt"),
                 after, before);
     }
+
+    public static Specification<Payment> fromFilter(PaymentFilter filter) {
+        if (filter == null) {
+            return null;
+        }
+
+        Specification<Payment> spec = null;
+
+        if (filter.getCurrency() != null && !filter.getCurrency().isBlank()) {
+            spec = Specification.where(hasCurrency(filter.getCurrency()));
+        }
+
+        BigDecimal min = filter.getMinAmount();
+        BigDecimal max = filter.getMaxAmount();
+        if (min != null || max != null) {
+            Specification<Payment> amountSpec = (root, query, cb) -> {
+                if (min != null && max != null) {
+                    return cb.between(root.get("amount"), min, max);
+                } else if (min != null) {
+                    return cb.greaterThanOrEqualTo(root.get("amount"), min);
+                } else {
+                    return cb.lessThanOrEqualTo(root.get("amount"), max);
+                }
+            };
+            spec = (spec == null) ? amountSpec : spec.and(amountSpec);
+        }
+
+        Instant after = filter.getCreatedAfter();
+        Instant before = filter.getCreatedBefore();
+        if (after != null || before != null) {
+            Specification<Payment> createdSpec = (root, query, cb) -> {
+                if (after != null && before != null) {
+                    return cb.between(root.get("createdAt"), after, before);
+                } else if (after != null) {
+                    return cb.greaterThanOrEqualTo(root.get("createdAt"), after);
+                } else {
+                    return cb.lessThanOrEqualTo(root.get("createdAt"), before);
+                }
+            };
+            spec = (spec == null) ? createdSpec : spec.and(createdSpec);
+        }
+
+        return spec;
+    }
+
 }
