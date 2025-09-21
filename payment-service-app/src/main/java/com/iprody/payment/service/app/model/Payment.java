@@ -127,4 +127,11 @@ public class Payment {
     protected void onUpdate() {
         updatedAt = OffsetDateTime.now();
     }
+
+    public void setId(UUID id) {
+    }
+
+    public UUID getId() {
+        return this.guid;
+    }
 }
