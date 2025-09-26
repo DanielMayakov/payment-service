@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface PaymentMapper {
@@ -20,5 +21,15 @@ public interface PaymentMapper {
 
     default OffsetDateTime map(Instant instant) {
         return instant == null ? null : OffsetDateTime.ofInstant(instant, ZoneOffset.UTC);
+    }
+
+    default List<PaymentDto> toDtos(List<Payment> payments) {
+        if (payments == null || payments.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+        return payments.stream()
+                .filter(java.util.Objects::nonNull)
+                .map(this::toDto)
+                .collect(java.util.stream.Collectors.toList());
     }
 }
