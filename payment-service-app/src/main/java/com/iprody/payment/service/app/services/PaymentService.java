@@ -1,13 +1,13 @@
 package com.iprody.payment.service.app.services;
 
 import com.iprody.payment.service.app.dto.PaymentDto;
+import com.iprody.payment.service.app.exception.EntityNotFoundException;
 import com.iprody.payment.service.app.mapper.PaymentMapper;
 import com.iprody.payment.service.app.model.Payment;
 import com.iprody.payment.service.app.PaymentFilter;
 import com.iprody.payment.service.app.PaymentFilterFactory;
 import com.iprody.payment.service.app.model.PaymentStatus;
 import com.iprody.payment.service.app.repository.PaymentRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,10 +38,19 @@ public class PaymentService {
     }
 
     public PaymentDto get(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID платежа не может быть null");
+        }
+
         return paymentRepository.findById(id)
                 .map(paymentMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Платеж не найден: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Платеж не найден",
+                        "get",
+                        id
+                ));
     }
+
 
     public PaymentDto create(PaymentDto dto) {
         Payment entity = paymentMapper.toEntity(dto);
@@ -57,9 +66,12 @@ public class PaymentService {
     }
 
     public PaymentDto update(UUID id, PaymentDto dto) {
-        if (!paymentRepository.existsById(id)) {
-            throw new EntityNotFoundException("Платеж не найден: " + id);
-        }
+        Payment existing = paymentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Платеж не найден",
+                        "update",
+                        id
+                ));
         Payment updated = paymentMapper.toEntity(dto);
         updated.setId(id);
         Payment saved = paymentRepository.save(updated);
@@ -68,22 +80,33 @@ public class PaymentService {
 
     public void delete(UUID id) {
         if (!paymentRepository.existsById(id)) {
-            throw new EntityNotFoundException("Платеж не найден: " + id);
+            throw new EntityNotFoundException(
+                    "Платеж не найден",
+                    "delete",
+                    id
+            );
         }
         paymentRepository.deleteById(id);
     }
 
+
     @Transactional
     public PaymentDto updateStatus(UUID id, PaymentStatus newStatus) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID платежа не может быть null");
+        }
         if (newStatus == null) {
             throw new IllegalArgumentException("Статус не может быть null");
         }
 
         Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Платеж не найден: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Платеж не найден",
+                        "updateStatus",
+                        id
+                ));
 
-        if (newStatus.equals(payment.getStatus())) {
-            // Статус не изменился — возвращаем текущие данные
+        if (payment.getStatus() == newStatus) {
             return paymentMapper.toDto(payment);
         }
 
@@ -92,4 +115,5 @@ public class PaymentService {
 
         return paymentMapper.toDto(saved);
     }
+
 }

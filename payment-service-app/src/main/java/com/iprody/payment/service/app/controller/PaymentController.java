@@ -5,17 +5,22 @@ import com.iprody.payment.service.app.PaymentFilter;
 import com.iprody.payment.service.app.dto.PaymentStatusUpdateDto;
 import com.iprody.payment.service.app.services.PaymentService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/payments")
+@Validated
 public class PaymentController {
     private final PaymentService paymentService;
 
@@ -25,7 +30,7 @@ public class PaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PaymentDto create(@RequestBody PaymentDto dto) {
+    public PaymentDto create(@RequestBody @Valid PaymentDto dto) { // добавили @Valid
         return paymentService.create(dto);
     }
 
@@ -42,21 +47,23 @@ public class PaymentController {
     @GetMapping("/search")
     public Page<PaymentDto> searchPayments(
             @ModelAttribute PaymentFilter filter,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "sortedBy") String sortBy,
-            @RequestParam(defaultValue = "desc") String direction
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") @Min(1) @Max(500) int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "DESC") Sort.Direction direction
     ) {
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
+        Set<String> allowedSorts = Set.of("createdAt", "status", "amount");
+        if (!allowedSorts.contains(sortBy)) {
+            throw new IllegalArgumentException("Unsupported sortBy=" + sortBy);
+        }
 
+        Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         return paymentService.searchPagedDto(filter, pageable);
     }
 
     @PutMapping("/{id}")
-    public PaymentDto update(@PathVariable UUID id, @RequestBody PaymentDto dto) {
+    public PaymentDto update(@PathVariable UUID id, @RequestBody @Valid PaymentDto dto) { // добавили @Valid
         return paymentService.update(id, dto);
     }
 
@@ -74,3 +81,4 @@ public class PaymentController {
         return paymentService.updateStatus(id, dto.getStatus());
     }
 }
+
