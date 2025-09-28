@@ -18,11 +18,9 @@ public class PaymentDto {
     private Instant createdAt;
     private Instant updatedAt;
 
-    // Пустой конструктор (нужен для фреймворков/MapStruct)
     public PaymentDto() {
     }
 
-    // Полный конструктор с Instant
     public PaymentDto(UUID id,
                       UUID inquiryRefId,
                       UUID transactionRefId,
@@ -43,7 +41,6 @@ public class PaymentDto {
         this.updatedAt = updatedAt;
     }
 
-    // Удобный конструктор с OffsetDateTime (автоматически конвертирует в Instant)
     public PaymentDto(UUID id,
                       UUID inquiryRefId,
                       UUID transactionRefId,
@@ -64,7 +61,6 @@ public class PaymentDto {
                 updatedAt != null ? updatedAt.toInstant() : null);
     }
 
-    // Статическая фабрика
     public static PaymentDto of(UUID id,
                                 UUID inquiryRefId,
                                 UUID transactionRefId,
@@ -77,7 +73,6 @@ public class PaymentDto {
         return new PaymentDto(id, inquiryRefId, transactionRefId, amount, currency, status, note, createdAt, updatedAt);
     }
 
-    // Builder
     public static Builder builder() {
         return new Builder();
     }
@@ -150,7 +145,6 @@ public class PaymentDto {
         }
     }
 
-    // Дополнительные геттер/сеттер для id, чтобы тест с dto.getId() проходил
     public UUID getId() {
         return guid;
     }
