@@ -31,7 +31,9 @@
         }
       ],
       "realmRoles": [
-        "user"
+        "user",
+        "reader",
+        "admin"
       ],
       "requiredActions": []
     }
