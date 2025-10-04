@@ -31,12 +31,6 @@ databaseChangeLog:
         - tagDatabase:
             tag: v1.1
 
-
-  - include:
-      file: v1.2/db.changelog-1.2-bulk-insert.yaml
-
-      relativeToChangelogFile: true
-
   - changeSet:
       id: tag-1.2
       author: mentor
