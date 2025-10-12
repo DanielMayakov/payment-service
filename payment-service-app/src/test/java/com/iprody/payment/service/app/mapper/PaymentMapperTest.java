@@ -1,5 +1,6 @@
+package com.iprody.payment.service.app.mapper;
+
 import com.iprody.payment.service.app.dto.PaymentDto;
-import com.iprody.payment.service.app.mapper.PaymentMapper;
 import com.iprody.payment.service.app.model.Payment;
 import com.iprody.payment.service.app.model.PaymentStatus;
 import org.junit.jupiter.api.Test;

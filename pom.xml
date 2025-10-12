@@ -13,6 +13,8 @@
     <properties>
         <java.version>17</java.version>
         <spring.boot.version>3.1.4</spring.boot.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <test.containers.version>1.19.3</test.containers.version>
     </properties>
 
     <dependencyManagement>
