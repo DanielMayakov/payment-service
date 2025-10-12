@@ -1,10 +1,11 @@
+package com.iprody.payment.service.app.services;
+
 import com.iprody.payment.service.app.dto.PaymentDto;
 import com.iprody.payment.service.app.exception.EntityNotFoundException;
 import com.iprody.payment.service.app.mapper.PaymentMapper;
 import com.iprody.payment.service.app.model.Payment;
 import com.iprody.payment.service.app.model.PaymentStatus;
 import com.iprody.payment.service.app.repository.PaymentRepository;
-import com.iprody.payment.service.app.services.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
